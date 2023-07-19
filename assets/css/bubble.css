@@ -1,0 +1,107 @@
+
+.bubble {
+    transition: 0.2s;
+    user-select: none;
+    z-index: -1;
+    padding: 2px;
+    opacity: 0;
+    border-radius: 4px;
+    position: fixed;
+    display: block;
+    transition-property: opacity;
+}
+
+
+.bubble .bubble-item {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.bubble .flex {
+    display: flex;
+    margin-bottom: 5px;
+    flex-direction: row;
+}
+
+.bubble .btn-bubble {
+    border-radius: 2px;
+}
+.bubble .btn-line {
+    width: 100%;
+    justify-content: flex-start;
+}
+.bubble .btn-color {
+    padding: 5px;
+    justify-content: space-between;
+}
+
+.bubble .btn-color input{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 25px;
+    height: 16px;
+}
+
+.bubble .btn-line label {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.bubble .btn-line span {
+    margin-right: 4px;
+}
+
+.bubble-format {
+    overflow: auto;
+    max-height: 180px;
+}
+
+.bubble-format .bubble-item {
+    padding: 2px;
+}
+.bubble-format .btn-line {
+    padding: 20px;
+    padding-left: 8px;
+}
+.bubble-format .btn-line span {
+    font-size: 25px;
+}
+
+.dark .bubble {
+    color: #fff8;
+    background-color: #1a1b1e;
+    box-shadow: 0px 0px 5px 2px #0002;
+}
+
+.dark .bubble .border-btn {
+    border-bottom: 1.5px solid #3338;
+}
+
+.dark input[type="color"]::-webkit-color-swatch {
+    border: 1px solid #3338;
+	border-radius: 2px;
+}
+
+.dark .bubble .bubble-size {
+    background-color: #25282c;
+}
+
+.light .bubble {
+    color: #333333;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 2px 2px #8882;
+}
+
+.light .bubble .border-btn {
+    border-bottom: 1.5px solid #ddd8;
+}
+
+.light input[type="color"]::-webkit-color-swatch {
+    border: 1px solid #ddd8;
+	border-radius: 2px;
+}

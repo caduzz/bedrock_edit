@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Text Editor</title>
+        <!-- resetar o css padrão do navegador -->
+        <link rel="stylesheet" href="assets/css/reset.css">
+        <!-- fonts -->
+        <link rel="stylesheet" href="assets/css/fonts.css">
+        <!-- material designer import -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css">
+        
+        <!-- css basico -->
+        <link rel="stylesheet" href="assets/css/styles.css">
+
+        <link rel="stylesheet" href="assets/css/bubble.css">
+    </head>
+    <body class="dark">
+        <div class="load">
+            <div class="loading-content">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="editor">
+                <div class="header-editor">
+                    <div class="header-content">
+                        <div class="header-item">
+                            <button 
+                                class="btn-hidden"
+                                data-show="show"
+                                id="btn-hidden"
+                            >
+                                <span class="mdi mdi-menu-up"></span>
+                            </button>
+                        </div>
+                        <div class="header-item border">
+                            <button 
+                                class="btn-action btn-option active"
+                                aria-label="align left" 
+                                data-action="align-left"
+                            >
+                                <span class="mdi mdi-format-align-left"></span>
+                            </button>
+                            <button 
+                                class="btn-action btn-option" 
+                                aria-label="align center" 
+                                data-action="align-center"
+                            >
+                                <span class="mdi mdi-format-align-center"></span>
+                            </button>
+                            <button 
+                                class="btn-action btn-option"
+                                aria-label="align right" 
+                                data-action="align-right"
+                            >
+                                <span class="mdi mdi-format-align-right"></span>
+                            </button>   
+                            <button 
+                                class="btn-action btn-option"
+                                aria-label="justify" 
+                                data-action="align-full"
+                            >
+                                <span class="mdi mdi-format-align-justify"></span>
+                            </button>
+                        </div>
+                        <div class="header-item">
+                            <button 
+                                class="btn-action btn-option"
+                                aria-label="bold" 
+                                data-action="bold"
+                            >
+                                <span class="mdi mdi-format-bold"></span>
+                            </button>
+                            <button 
+                                class="btn-action btn-option" 
+                                title="italic" 
+                                aria-label="italic" 
+                                data-action="italic"
+                            >
+                                <span class="mdi mdi-format-italic"></span>
+                            </button>
+                            <button 
+                                class="btn-action btn-option"
+                                aria-label="underline" 
+                                data-action="underline"
+                            >
+                                <span class="mdi mdi-format-underline"></span>
+                            </button>
+                            <button 
+                                class="btn-action btn-option"
+                                aria-label="strikethrough" 
+                                data-action="strikethrough"
+                            >
+                                <span class="mdi mdi-format-strikethrough"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="header-content">
+                        <div class="header-item">
+                            <button 
+                                class="btn-action btn-size"
+                                aria-label="font size -" 
+                                data-action="size-"
+                            >
+                                <span class="mdi mdi-format-font-size-decrease"></span>
+                            </button>
+                            <span class="size-input" type="number"></span>
+                            <button 
+                                class="btn-action btn-size" 
+                                aria-label="font size +" 
+                                data-action="size+"
+                            >
+                                <span class="mdi mdi-format-font-size-increase"></span>
+                            </button>
+                        </div>
+                        <div class="header-item">
+                            <select class="font-selected">
+                                <option value="Arial">Arial</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Verdana">Verdana</option>
+                                <option value="Courier New">Courier New</option>
+                            </select>
+                        </div>
+                        <div class="header-item">
+                            <button 
+                                class="btn-action btn-option" 
+                                aria-label="save" 
+                                data-action="save"
+                            >
+                                <span class="mdi mdi-file-document-check-outline"></span>
+                            </button>
+                            <button 
+                                class="btn-action btn-theme" 
+                                aria-label="theme"
+                            >
+                                <span class="mdi mdi-sun-wireless-outline"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-editor">
+                    <pre
+                        id="editor"
+                        class="text-editor"
+                        contenteditable="true"
+                    >
+                    </pre>
+                </div>
+                <div class="bubble bubble-menu">
+                    <div class="bubble-item flex border-btn">
+                        <button 
+                            class="btn-bubble btn-option"
+                            data-action="bold"
+                        >
+                            <span class="mdi mdi-format-bold"></span>
+                        </button>
+                        <button 
+                            class="btn-bubble btn-option"
+                            data-action="italic"
+                        >
+                            <span class="mdi mdi-format-italic"></span>
+                        </button>
+                        <button 
+                            class="btn-bubble btn-option"
+                            data-action="underline"
+                        >
+                            <span class="mdi mdi-format-underline"></span>
+                        </button>
+                        <button 
+                            class="btn-bubble btn-option"
+                            data-action="strikethrough"
+                        >
+                            <span class="mdi mdi-format-strikethrough"></span>
+                        </button>
+                    </div>
+                    <div class="bubble-item flex border-btn">
+                        <button 
+                            class="btn-bubble btn-option"
+                            data-action="copy"
+                        >
+                            <span class="mdi mdi-content-copy"></span>
+                        </button>
+                        <button 
+                            class="btn-bubble btn-option" 
+                            data-action="cut"
+                        >
+                            <span class="mdi mdi-content-cut"></span>
+                        </button>
+                        <button 
+                            class="btn-bubble btn-option"
+                            data-action="paste"
+                        >
+                            <span class="mdi mdi-content-paste"></span>
+                        </button>
+                    </div>
+                    <div class="bubble-item border-btn">
+                        <button 
+                            class="btn-bubble btn-line btn-color btn-option"
+                            data-action="foreColor"
+                        >
+                            <label for="color-font">
+                                <span class="mdi mdi-format-color-text"></span>
+                                Font
+                            </label>
+                            <input id="color-font" class="input-font-color input-color-def" type="color" value="#ffffff"/>
+                        </button>
+                        <button 
+                            class="btn-bubble btn-line btn-color btn-option"
+                            data-action="backColor"
+                        >
+                            <label for="color-bg">
+                                <span class="mdi mdi-format-color-highlight"></span>
+                                Background
+                            </label>
+                            <input id="color-bg" class="input-bg-color input-color-def" type="color" value="#ffffff"/>
+                        </button>
+                    </div>
+                    <div class="bubble-item  flex">
+                        <button 
+                            class="btn-bubble btn-size"
+                            aria-label="font size -" 
+                            data-action="size-"
+                        >
+                            <span class="mdi mdi-format-font-size-decrease"></span>
+                        </button>
+                        <span class="bubble-size size-input" type="number"></span>
+                        <button 
+                            class="btn-bubble btn-size" 
+                            aria-label="font size +" 
+                            data-action="size+"
+                        >
+                            <span class="mdi mdi-format-font-size-increase"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="bubble bubble-format">
+                    <div class="bubble-item">
+                        <button 
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="h1"
+                        >
+                            <span class="mdi mdi-format-header-1"></span>
+                            Header 1
+                        </button>
+                        <button 
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="h2"
+                        >
+                            <span class="mdi mdi-format-header-2"></span>
+                            Header 2
+                        </button>
+                        <button 
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="h3"
+                        >
+                            <span class="mdi mdi-format-header-3"></span>
+                            Header 3
+                        </button>
+                        <button 
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="p"
+                        >
+                            <span class="mdi mdi-text"></span>
+                            Text
+                        </button>
+                        <button 
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="blockquote"
+                        >
+                            <span class="mdi mdi-format-quote-open"></span>
+                            Quote
+                        </button>
+                        <button
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="table"
+                        >
+                            <span class="mdi mdi-table"></span>
+                            Table
+                        </button>
+                        <button
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="a"
+                        >
+                            <span class="mdi mdi-link"></span>
+                            Link
+                        </button>
+                        <button
+                            class="btn-bubble btn-line btn-option"
+                            data-action="insertHTML"
+                            data-html="callout"
+                        >
+                            <span class="mdi mdi-card-text"></span>
+                            Callout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="assets/js/paste.js"></script>
+        <script src="assets/js/script.js"></script>
+        <script src="assets/js/bubble.js"></script>
+        <script src="assets/js/theme.js"></script>
+    </body>
+</html>
