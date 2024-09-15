@@ -249,7 +249,7 @@
     margin-bottom: 15px;
 }
 
-.text-editor .callout {
+.text-editor #callout {
     width: 100%;
     border-radius: 5px;
     height: auto;
@@ -336,7 +336,7 @@ i {
     background-color: #25282c;
 }
 
-.dark .text-editor .callout {
+.dark .text-editor #callout {
     background-color: #1a1b1e;
 }
 
@@ -411,7 +411,7 @@ i {
     background-color: #ffffff;
 }
 
-.light .text-editor .callout {
+.light .text-editor #callout {
     background-color: #f7f7f7;
 }
 

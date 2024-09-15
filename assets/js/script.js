@@ -1,5 +1,5 @@
 const loadingPage = document.querySelector('.load');
-const btnAction = document.querySelectorAll('.btn-option');
+const btnOption = document.querySelectorAll('.btn-option');
 const btnResize = document.querySelectorAll('.btn-size');
 const btnTheme = document.querySelector('.btn-theme');
 const btnHidden = document.querySelector('#btn-hidden');
@@ -32,40 +32,93 @@ window.onload = async () => {
     }, 500)
 };
 
-textarea.addEventListener('select', verifyContent)
+textarea.addEventListener('paste', handlePaste);
 textarea.addEventListener('click', verifyContent)
 textarea.addEventListener('input', verifyContent)
-textarea.addEventListener('keyup', handleKeyUp);
-textarea.addEventListener('paste', handlePaste);
-selectdFont.addEventListener('change', handleFontChange);
+textarea.addEventListener('select', verifyContent)
+textarea.addEventListener('keydown', handleEnterKey);
+textarea.addEventListener('keyup', handleBubbleFormat);
 btnHidden.addEventListener('click', handleHiddenButtonClick);
+selectdFont.addEventListener('change', handleFontChange);
+
 btnResize.forEach((btn) => btn.addEventListener('click', handleResizeButtonClick));
-btnAction.forEach((btn) => btn.addEventListener('click', handleActionButtonClick));
+btnOption.forEach((btn) => btn.addEventListener('click', handleActionButtonClick));
 colorDef.forEach((input) => input.addEventListener('change', (event) => handleColorInputChange(event)));
 
+
 // Em analise
-function handleKeyUp(event) {
+function handleEnterKey(event) {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+
+    if(event.key === 'Enter'){
+        const newLine = document.createElement('div');
+        const br = document.createElement('br');
+        newLine.appendChild(br)
+
+        if (event.ctrlKey) {
+            event.preventDefault();
+            const textField = document.querySelector('.text-editor');
+            textField.appendChild(newLine);;
+
+            range.selectNodeContents(newLine);
+            range.collapse(true);
+        } else if (!event.ctrlKey) {
+            event.preventDefault();
+        
+            range.insertNode(newLine);
+            range.setStartAfter(newLine);
+            range.collapse(false);
+        }
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
+
+function handleBubbleFormat() {
     const selection = window.getSelection();
     const range = selection.getRangeAt(0);
     const startOffset = range.startOffset;
 
-    const previousCharacter = range.startContainer.textContent.slice(0, 1);
+    const previousCharacter = range.startContainer.textContent[startOffset - 1];
     if(previousCharacter === '/'){
-        const editorRect = editor.getBoundingClientRect();
         const cursorRect = range.getClientRects()[0];
-
-        const topOffset = cursorRect.top - (editorRect.top - bubbleFormat.offsetWidth / 1.5) + 8;
-        const leftOffset = cursorRect.left - editorRect.left + 10;
+        
+        const cursorX = cursorRect.left;
+        const cursorY = cursorRect.top;
+      
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        
+        const isNearHorizontalEdges = cursorX < windowWidth / 2;
+        const isNearVerticalEdges = cursorY < windowHeight / 2;
+        
+        const bubbleWidth = bubbleFormat.offsetWidth;
+        const bubbleHeight = bubbleFormat.offsetHeight;
+        
+        let left, top;
+        
+        if (isNearHorizontalEdges) {
+          left = cursorX + bubbleWidth > windowWidth ? windowWidth - bubbleWidth : cursorX;
+        } else {
+          left = cursorX < bubbleWidth ? 0 : cursorX - bubbleWidth;
+        }
+        
+        if (isNearVerticalEdges) {
+          top = cursorY + bubbleHeight > windowHeight ? windowHeight - bubbleHeight : cursorY + 20;
+        } else {
+          top = cursorY < bubbleHeight ? 0 : cursorY - bubbleHeight;
+        }
 
         bubbleFormat.style.opacity = 1;
         bubbleFormat.style.zIndex = '99';
-        bubbleFormat.style.left = leftOffset + 'px';
-        bubbleFormat.style.top = topOffset + 'px';
+        bubbleFormat.style.left = left + 'px';
+        bubbleFormat.style.top = top + 'px';
     }else {
         bubbleFormat.style.opacity = 0;
         bubbleFormat.style.zIndex = '-1';
     }
-
     verifyContent()
 }
 
@@ -116,7 +169,6 @@ function handleHiddenButtonClick({ target }) {
 
 function handleResizeButtonClick({ target }) {
     const action = target.closest('button').dataset.action;
-
     if (action === 'size-') {
         if (fontSize <= 7 && fontSize > 0) {
         fontSize -= 1;
@@ -168,22 +220,22 @@ function handleActionButtonClick(event) {
                         <table>
                             <tr>
                                 <th></th>
-                                <th></th>
-                                <th></th>
                             </tr>
                             <tr>
-                                <td></td>
-                                <td></td>
                                 <td></td>
                             </tr>
                         </table>
                     `;
-                } else if (tag === 'callout') {
-                    iHTML = `<div rows="1" class="callout">
-                    </div>`;
+                } else if (tag === 'callout' || tag === 'p' || tag === 'blockquote') {
+                    if(tag === 'callout'){
+                        iHTML = `<div id="callout" class="badrock_component"><br/></div>`;
+                    } else {
+                        iHTML = `<${tag} class="badrock_component">Exemple<${tag}>`;
+                    }
                 } else {
-                    iHTML = `<br/><${tag}>exemple<${tag}>`;
+                    iHTML = `<${tag} class="badrock_tag">Exemple<${tag}>`;
                 }
+                resetBubbleFormat()
                 document.execCommand(action, false, iHTML);
             } else {
                 document.execCommand(action, false, null);
@@ -192,6 +244,12 @@ function handleActionButtonClick(event) {
         verifyContent();
         }
     }
+}
+
+function resetBubbleFormat() {
+    document.execCommand("delete", false, null);
+
+    handleBubbleFormat()
 }
 
 function verifyContent() {
@@ -204,49 +262,48 @@ function verifyContent() {
     const isJustifyRight = document.queryCommandState("justifyRight");
     const isJustifyLeft = document.queryCommandState("justifyLeft");
 
-    btnAction.forEach((btn) => {
+    btnOption.forEach((btn) => {
         const action = btn.dataset.action;
         const actionType = action.split('-');
 
         if (actionType[0] === 'align') {
             switch (actionType[1]) {
                 case 'full':
-                checkActiveBtn(btn, isJustifyFull);
+                    checkActiveBtn(btn, isJustifyFull);
                 break;
                 case 'center':
-                checkActiveBtn(btn, isJustifyCenter);
+                    checkActiveBtn(btn, isJustifyCenter);
                 break;
                 case 'right':
-                checkActiveBtn(btn, isJustifyRight);
+                    checkActiveBtn(btn, isJustifyRight);
                 break;
                 case 'left':
-                checkActiveBtn(btn, isJustifyLeft);
+                    checkActiveBtn(btn, isJustifyLeft);
                 break;
             }
         } else {
             switch (action) {
                 case 'bold':
-                checkActiveBtn(btn, isBold);
+                    checkActiveBtn(btn, isBold);
                 break;
                 case 'italic':
-                checkActiveBtn(btn, isItalic);
+                    checkActiveBtn(btn, isItalic);
                 break;
                 case 'underline':
-                checkActiveBtn(btn, isUnderline);
+                    checkActiveBtn(btn, isUnderline);
                 break;
                 case 'strikethrough':
-                checkActiveBtn(btn, isStrikethrough);
+                    checkActiveBtn(btn, isStrikethrough);
                 break;
             }
         }
     });
-}
-
-function checkActiveBtn(button, validate) {
-    if (validate) {
-        button.classList.add('active');
-    } else {
-        button.classList.remove('active');
+    function checkActiveBtn(button, validate) {
+        if (validate) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
     }
 }
   
